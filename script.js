@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             gridContainer.appendChild(row);
         }
+
         gridBackground.appendChild(gridContainer);
     }
 
@@ -155,45 +156,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Click Spark Animation
-    document.addEventListener('click', (e) => {
-        const sparkCount = 12;
-        const colors = [
-            'rgb(125, 211, 252)', // sky-300
-            'rgb(249, 168, 212)', // pink-300
-            'rgb(134, 239, 172)', // green-300
-            'rgb(253, 224, 71)',  // yellow-300
-            'rgb(252, 165, 165)', // red-300
-            'rgb(216, 180, 254)', // purple-300
-        ];
 
-        for (let i = 0; i < sparkCount; i++) {
-            const spark = document.createElement('div');
-            spark.className = 'spark';
-
-            // Random position near cursor
-            spark.style.left = `${e.pageX}px`;
-            spark.style.top = `${e.pageY}px`;
-
-            // Random color
-            spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-            // Random direction
-            const angle = (i / sparkCount) * 360 + Math.random() * 30;
-            const velocity = 20 + Math.random() * 40;
-
-            const tx = Math.cos(angle * Math.PI / 180) * velocity;
-            const ty = Math.sin(angle * Math.PI / 180) * velocity;
-
-            spark.style.setProperty('--tx', `${tx}px`);
-            spark.style.setProperty('--ty', `${ty}px`);
-
-            document.body.appendChild(spark);
-
-            // Remove after animation
-            setTimeout(() => {
-                spark.remove();
-            }, 800);
-        }
-    });
 });

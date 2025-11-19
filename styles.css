@@ -581,29 +581,7 @@ nav {
     }
 }
 
-/* Click Spark Animation */
-.spark {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    pointer-events: none;
-    background-color: var(--accent-color);
-    animation: spark-fade 0.8s ease-out forwards;
-    z-index: 9999;
-}
 
-@keyframes spark-fade {
-    0% {
-        transform: translate(0, 0) scale(1);
-        opacity: 1;
-    }
-
-    100% {
-        transform: translate(var(--tx), var(--ty)) scale(0);
-        opacity: 0;
-    }
-}
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
