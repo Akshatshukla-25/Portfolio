@@ -1,53 +1,75 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Animated Grid Background
-    const gridBackground = document.querySelector('.grid-background');
-    if (gridBackground) {
-        const colors = [
-            'rgba(125, 211, 252, 0.5)', // sky-300
-            'rgba(249, 168, 212, 0.5)', // pink-300
-            'rgba(134, 239, 172, 0.5)', // green-300
-            'rgba(253, 224, 71, 0.5)',  // yellow-300
-            'rgba(252, 165, 165, 0.5)', // red-300
-            'rgba(216, 180, 254, 0.5)', // purple-300
-            'rgba(147, 197, 253, 0.5)', // blue-300
-        ];
+    // Floating Lines Background
+    const canvas = document.getElementById('floating-lines');
+    if (canvas) {
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let lines = [];
 
-        const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
+        const resize = () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            initLines();
+        };
 
-        const gridContainer = document.createElement('div');
-        gridContainer.className = 'grid-container';
-
-        // Optimized grid size for performance
-        const rows = 50;
-        const cols = 50;
-
-        for (let i = 0; i < rows; i++) {
-            const row = document.createElement('div');
-            row.className = 'grid-row';
-
-            for (let j = 0; j < cols; j++) {
-                const cell = document.createElement('div');
-                cell.className = 'grid-cell';
-
-                // Smoother hover effect
-                cell.addEventListener('mouseenter', () => {
-                    const color = getRandomColor();
-                    cell.style.backgroundColor = color;
-                    cell.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-                    cell.style.transition = 'background-color 0s, box-shadow 0s';
-                });
-
-                cell.addEventListener('mouseleave', () => {
-                    cell.style.transition = 'background-color 1s ease, box-shadow 1s ease';
-                    cell.style.backgroundColor = 'transparent';
-                    cell.style.boxShadow = 'none';
-                });
-
-                row.appendChild(cell);
+        class Line {
+            constructor() {
+                this.reset();
             }
-            gridContainer.appendChild(row);
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.length = 100 + Math.random() * 300;
+                this.speed = 0.5 + Math.random() * 1;
+                this.opacity = 0.1 + Math.random() * 0.2;
+                this.width = 1 + Math.random() * 2;
+                this.color = Math.random() > 0.5 ? '255, 255, 255' : '161, 161, 170'; // white or muted
+            }
+
+            update() {
+                this.x += this.speed;
+                if (this.x > width) {
+                    this.x = -this.length;
+                    this.y = Math.random() * height;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                const gradient = ctx.createLinearGradient(this.x, this.y, this.x + this.length, this.y);
+                gradient.addColorStop(0, `rgba(${this.color}, 0)`);
+                gradient.addColorStop(0.5, `rgba(${this.color}, ${this.opacity})`);
+                gradient.addColorStop(1, `rgba(${this.color}, 0)`);
+
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = this.width;
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x + this.length, this.y);
+                ctx.stroke();
+            }
         }
-        gridBackground.appendChild(gridContainer);
+
+        const initLines = () => {
+            lines = [];
+            const lineCount = Math.floor(height / 20); // Density based on height
+            for (let i = 0; i < lineCount; i++) {
+                lines.push(new Line());
+            }
+        };
+
+        const animate = () => {
+            ctx.clearRect(0, 0, width, height);
+            lines.forEach(line => {
+                line.update();
+                line.draw();
+            });
+            requestAnimationFrame(animate);
+        };
+
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
     }
 
     // Typing Effect
@@ -136,5 +158,47 @@ document.addEventListener('DOMContentLoaded', () => {
             card.style.setProperty('--mouse-x', `${x}px`);
             card.style.setProperty('--mouse-y', `${y}px`);
         });
+    });
+
+    // Click Spark Animation
+    document.addEventListener('click', (e) => {
+        const sparkCount = 12;
+        const colors = [
+            'rgb(125, 211, 252)', // sky-300
+            'rgb(249, 168, 212)', // pink-300
+            'rgb(134, 239, 172)', // green-300
+            'rgb(253, 224, 71)',  // yellow-300
+            'rgb(252, 165, 165)', // red-300
+            'rgb(216, 180, 254)', // purple-300
+        ];
+
+        for (let i = 0; i < sparkCount; i++) {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+
+            // Random position near cursor
+            spark.style.left = `${e.pageX}px`;
+            spark.style.top = `${e.pageY}px`;
+
+            // Random color
+            spark.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+            // Random direction
+            const angle = (i / sparkCount) * 360 + Math.random() * 30;
+            const velocity = 20 + Math.random() * 40;
+
+            const tx = Math.cos(angle * Math.PI / 180) * velocity;
+            const ty = Math.sin(angle * Math.PI / 180) * velocity;
+
+            spark.style.setProperty('--tx', `${tx}px`);
+            spark.style.setProperty('--ty', `${ty}px`);
+
+            document.body.appendChild(spark);
+
+            // Remove after animation
+            setTimeout(() => {
+                spark.remove();
+            }, 800);
+        }
     });
 });
