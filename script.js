@@ -110,6 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
+    // Add fade-in class to elements we want to animate
+    const animatedElements = document.querySelectorAll('.section-title, .skill-card, .project-card, .about-text, .contact-text, .footer');
+    animatedElements.forEach((el, index) => {
+        el.classList.add('fade-in');
+        // Add staggered delay for cards
+        if (el.classList.contains('skill-card') || el.classList.contains('project-card')) {
+            el.style.transitionDelay = `${(index % 3) * 0.1}s`;
+        }
+        observer.observe(el);
+    });
+
+    // Also observe existing fade-in elements (like in hero)
     document.querySelectorAll('.fade-in').forEach(el => {
         observer.observe(el);
     });
