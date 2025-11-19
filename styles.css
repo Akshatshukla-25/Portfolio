@@ -176,8 +176,8 @@ nav {
     transition: var(--transition);
 }
 
-/* Floating Lines Background */
-#floating-lines {
+/* Prism Animation */
+.prism-container {
     position: absolute;
     top: 0;
     left: 0;
