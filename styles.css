@@ -219,6 +219,17 @@ nav {
     background-color: var(--grid-hover-color);
 }
 
+.grid-cell svg {
+    position: absolute;
+    height: 1.5rem;
+    width: 2.5rem;
+    top: -0.875rem;
+    left: -1.375rem;
+    color: #27272a;
+    stroke-width: 1px;
+    pointer-events: none;
+}
+
 /* Hero Section */
 .hero-section {
     height: 100vh;

@@ -19,9 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const gridContainer = document.createElement('div');
         gridContainer.className = 'grid-container';
 
-        // Optimized grid size for performance
-        const rows = 50;
-        const cols = 50;
+        const rows = 150;
+        const cols = 100;
 
         for (let i = 0; i < rows; i++) {
             const row = document.createElement('div');
@@ -31,19 +30,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 const cell = document.createElement('div');
                 cell.className = 'grid-cell';
 
-                // Smoother hover effect
+                // Add hover effect
                 cell.addEventListener('mouseenter', () => {
                     const color = getRandomColor();
+                    cell.style.setProperty('--grid-hover-color', color);
                     cell.style.backgroundColor = color;
-                    cell.style.boxShadow = `0 0 10px ${color}, 0 0 20px ${color}`;
-                    cell.style.transition = 'background-color 0s, box-shadow 0s';
                 });
 
                 cell.addEventListener('mouseleave', () => {
-                    cell.style.transition = 'background-color 1s ease, box-shadow 1s ease';
-                    cell.style.backgroundColor = 'transparent';
-                    cell.style.boxShadow = 'none';
+                    setTimeout(() => {
+                        cell.style.backgroundColor = 'transparent';
+                    }, 2000);
                 });
+
+                // Add cross SVG to every other cell
+                if (j % 2 === 0 && i % 2 === 0) {
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.setAttribute('fill', 'none');
+                    svg.setAttribute('viewBox', '0 0 24 24');
+                    svg.setAttribute('stroke-width', '1.5');
+                    svg.setAttribute('stroke', 'currentColor');
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('stroke-linecap', 'round');
+                    path.setAttribute('stroke-linejoin', 'round');
+                    path.setAttribute('d', 'M12 6v12m6-6H6');
+
+                    svg.appendChild(path);
+                    cell.appendChild(svg);
+                }
 
                 row.appendChild(cell);
             }
